@@ -1,15 +1,17 @@
-import { StackNavigator } from 'react-navigation'
+import { TabNavigator } from 'react-navigation'
 import LaunchScreen from '../Containers/LaunchScreen'
+import ListScreen from '../Containers/ListScreen'
 
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens
-const PrimaryNav = StackNavigator({
-  LaunchScreen: { screen: LaunchScreen }
+const PrimaryNav = TabNavigator({
+  LaunchScreen: { screen: LaunchScreen },
+  ListScreen: { screen: ListScreen }
 }, {
   // Default config for all screens
   headerMode: 'none',
-  initialRouteName: 'LaunchScreen',
+  initialRouteName: 'ListScreen',
   navigationOptions: {
     headerStyle: styles.header
   }
