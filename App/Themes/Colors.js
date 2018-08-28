@@ -1,3 +1,5 @@
+const tintColor = '#2f95dc';
+
 const colors = {
   background: '#1F0808',
   clear: 'rgba(0,0,0,0)',
@@ -21,7 +23,18 @@ const colors = {
   eggplant: '#251a34',
   border: '#483F53',
   banner: '#5F3E63',
-  text: '#E0D7E5'
+  text: '#E0D7E5',
+  tintColor,
+  tabIconDefault: '#b5b5b5',
+  tabIconSelected: '#000',
+  tabBar: '#fefefe',
+  border: '#e5e5e5',
+  errorBackground: 'red',
+  errorText: '#fff',
+  warningBackground: '#EAEB5E',
+  warningText: '#666804',
+  noticeBackground: tintColor,
+  noticeText: '#fff',
 }
 
 export default colors
