@@ -71,7 +71,7 @@ class LaunchScreen extends Component {
     super(props)
     this.state = {
       isUploading: false,
-
+      page: 1,
     }
   }
   async componentDidMount() {
@@ -80,20 +80,36 @@ class LaunchScreen extends Component {
     })
     const apiOptions = {
       method: 'GET',
-      url: 'http://reqres.in/api/users',
+      url: `https://api.github.com/users`,
     };
     try {
       const response = await axios(apiOptions)
-      const users = response.data.data
+      const users = response.data
       this.setState({
         isUploading: false,
         users
       });
-      console.log("===api users", users)
+      // console.log("===github api users response", users)
       this.props.getUsers(users)
     } catch (error) {
       console.error(error);
     }
+    // const apiOptions = {
+    //   method: 'GET',
+    //   url: `http://reqres.in/api/users?page=${this.state.page}`,
+    // };
+    // try {
+    //   const response = await axios(apiOptions)
+    //   const users = response.data.data
+    //   this.setState({
+    //     isUploading: false,
+    //     users
+    //   });
+    //   console.log("===api users", users)
+    //   this.props.getUsers(users)
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
   render () {
     let { isUploading } = this.state;

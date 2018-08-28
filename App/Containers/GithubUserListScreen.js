@@ -8,8 +8,8 @@ import { connect } from 'react-redux'
 import styles from './Styles/ListScreenStyles'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import ControlTab from '../Components/ControlTab'
-import FlatListItem from '../Components/FlatListItem'
-import FlatListGrid from '../Components/FlatListGrid'
+import FlatListItem from '../Components/GithubUserFlatListItem'
+import FlatListGrid from '../Components/GithubUserFlatListGrid'
 import UsersActions from '../Redux/Users'
 import axios from 'axios'
 
@@ -55,8 +55,8 @@ class ListScreen extends Component {
         });
         console.log("===api users", users)
         // this.props.getUsers(users)
-        // let rowData = Array.from(this.props.users, (value, index) => value)
-        let rowData = Array.from(users, (value, index) => value)
+        let rowData = Array.from(this.props.users, (value, index) => value)
+        // let rowData = Array.from(users, (value, index) => value)
         // console.log("====rowData, users, page", rowData, users, page)
         // Simulate the end of the list if there is no more data returned from the server
         if (page === 10) {
@@ -204,6 +204,7 @@ class ListScreen extends Component {
               <Input placeholder="Search" onChangeText={this.onChangeScrollToIndex} value={this.state.text} />
             </Item>
           </Header>
+        {this.props.users.length !==0 &&
           <UltimateListView
             ref={ref => this.listView = ref}
             key={this.state.layout} // this is important to distinguish different FlatList, default is numColumns
@@ -231,6 +232,7 @@ class ListScreen extends Component {
             refreshViewStyle={Platform.OS === 'ios' ? { height: 80, top: -80 } : { height: 80 }}
             refreshViewHeight={80}
           />
+        }
       </View>
     )
   }

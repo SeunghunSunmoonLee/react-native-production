@@ -18,7 +18,7 @@ export default class FlatListGrid extends PureComponent {
       <TouchableOpacity onPress={() => this.props.onPress('GridView', rowID, rowData)}>
         <View style={{ margin: 0.5, width: width / 3, paddingBottom: 15 }}>
           <Thumbnail square source={{uri: rowData.avatar_url}} style={styles.gridThumb} />
-          <Text style={styles.gridText}>{rowData.first_name} {rowData.last_name}</Text>
+          <Text style={styles.gridText}>{rowData.login}</Text>
           <Text style={styles.gridText}>dreamer</Text>
         </View>
       </TouchableOpacity>
