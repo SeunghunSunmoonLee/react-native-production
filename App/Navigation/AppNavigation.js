@@ -36,14 +36,14 @@ const PrimaryNav = TabNavigator({
       let iconName;
       switch (routeName) {
         case 'LaunchScreen':
-          iconName = Platform.OS === 'ios' ? 'ios-list' : 'md-list';
+          iconName = Platform.OS === 'ios' ? 'ios-home' : 'md-home';
           break;
         case 'ListScreen':
-          iconName = Platform.OS === 'ios' ? 'ios-map-outline' : 'md-map';
+          iconName = Platform.OS === 'ios' ? 'ios-contacts' : 'md-contacts';
           break;
         case 'GithubUserListScreen':
           iconName =
-            Platform.OS === 'ios' ? 'ios-options-outline' : 'md-options';
+            Platform.OS === 'ios' ? 'ios-people' : 'md-people';
       }
       return (
         <Ionicons

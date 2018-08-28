@@ -21,6 +21,7 @@ class ListScreen extends Component {
       layout: 'list',
       text: '',
       loaded: false,
+      users: [],
     }
   }
   componentDidMount = async () => {
@@ -42,20 +43,22 @@ class ListScreen extends Component {
       // let rowData = Array.from({ length: pageLimit }, (value, index) => `item -> ${index + skip}`)
 
 
-      const apiOptions = {
-        method: 'GET',
-        url: `http://reqres.in/api/users?page=${page}`,
-      };
+      // const apiOptions = {
+      //   method: 'GET',
+      //   url: `http://reqres.in/api/users?page=${page}`,
+      // };
       try {
-        const response = await axios(apiOptions)
-        const users = response.data.data
-        this.setState({
-          isUploading: false,
-          users
-        });
-        console.log("===api users", users)
+        // const response = await axios(apiOptions)
+        // const users = response.data.data
+        // this.setState({
+        //   isUploading: false,
+        //   users
+        // });
+        // console.log("===api users", users)
         // this.props.getUsers(users)
-        let rowData = Array.from(this.props.users, (value, index) => value)
+        let rowData = Array.from(this.props.users.slice(skip, skip + pageLimit), (value, index) => value)
+        // console.log("===rowData", rowData)
+        this.setState((prevState, props) => { return { users: prevState.users.concat(this.props.users.slice(skip, skip + pageLimit)) }})
         // let rowData = Array.from(users, (value, index) => value)
         // console.log("====rowData, users, page", rowData, users, page)
         // Simulate the end of the list if there is no more data returned from the server
@@ -77,7 +80,7 @@ class ListScreen extends Component {
   }
 
   updateDataSource = async (rows) => {
-      console.log("====updateDataSource rows", rows)
+      // console.log("====updateDataSource rows", rows)
       // try {
 
       // This is required to determinate whether the first loading list is all loaded.
@@ -138,10 +141,14 @@ class ListScreen extends Component {
   }
 
   onChangeScrollToIndex = (num) => {
+    // console.log("===onChangeScrollToIndex num", num)
     this.setState({ text: num })
-    let index = num
+    // console.log("===this.state.users in search", this.state.users)
+    let index = this.state.users.findIndex(k => k.login.includes(num))
+    // let index = num
     if (this.state.layout === 'grid') {
-      index = num / 3
+      // index = num / 3
+      index = index / 3
     }
     try {
       this.listView.scrollToIndex({ viewPosition: 0, index: Math.floor(index) })
@@ -157,7 +164,7 @@ class ListScreen extends Component {
   sleep = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
   renderItem = (item, index, separator) => {
-    console.log("====item", item)
+    // console.log("====item", item)
     if (this.state.layout === 'list') {
       return (
         <FlatListItem item={item} index={index} onPress={this.onPressItem} />
@@ -177,12 +184,12 @@ class ListScreen extends Component {
     />
   )
 
+  // <View style={styles.header}>
+  //   <Text style={{ textAlign: 'center' }}>I am the Header View, you can put some Instructions or Ads Banner here!
+  //   </Text>
+  // </View>
   renderHeader = () => (
     <View>
-      <View style={styles.header}>
-        <Text style={{ textAlign: 'center' }}>I am the Header View, you can put some Instructions or Ads Banner here!
-        </Text>
-      </View>
       <View style={styles.headerSegment}>
         <Left style={{ flex: 0.15 }} />
         {this.renderControlTab()}
@@ -238,7 +245,7 @@ class ListScreen extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  console.log("===redux state tree", state)
+  // console.log("===redux state tree", state)
   return {
     users: state.users.users,
   }

@@ -157,7 +157,7 @@ class ListScreen extends Component {
   sleep = time => new Promise(resolve => setTimeout(() => resolve(), time))
 
   renderItem = (item, index, separator) => {
-    console.log("====item", item)
+    // console.log("====item", item)
     if (this.state.layout === 'list') {
       return (
         <FlatListItem item={item} index={index} onPress={this.onPressItem} />
@@ -177,12 +177,12 @@ class ListScreen extends Component {
     />
   )
 
+  // <View style={styles.header}>
+  //   <Text style={{ textAlign: 'center' }}>I am the Header View, you can put some Instructions or Ads Banner here!
+  //   </Text>
+  // </View>
   renderHeader = () => (
     <View>
-      <View style={styles.header}>
-        <Text style={{ textAlign: 'center' }}>I am the Header View, you can put some Instructions or Ads Banner here!
-        </Text>
-      </View>
       <View style={styles.headerSegment}>
         <Left style={{ flex: 0.15 }} />
         {this.renderControlTab()}
