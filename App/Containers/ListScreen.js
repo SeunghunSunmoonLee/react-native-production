@@ -21,6 +21,7 @@ class ListScreen extends Component {
       layout: 'list',
       text: '',
       loaded: false,
+      users: [],
     }
   }
   componentDidMount = async () => {
@@ -34,37 +35,28 @@ class ListScreen extends Component {
   onFetch = async (page = 1, startFetch, abortFetch) => {
     try {
       // This is required to determinate whether the first loading list is all loaded.
-      let pageLimit = 24
+      let pageLimit = 3
       if (this.state.layout === 'grid') pageLimit = 60
       const skip = (page - 1) * pageLimit
-
-      // Generate dummy data
-      // let rowData = Array.from({ length: pageLimit }, (value, index) => `item -> ${index + skip}`)
-
-
       const apiOptions = {
         method: 'GET',
         url: `http://reqres.in/api/users?page=${page}`,
       };
+
       try {
         const response = await axios(apiOptions)
         const users = response.data.data
-        this.setState({
-          isUploading: false,
-          users
-        });
-        console.log("===api users", users)
-        // this.props.getUsers(users)
-        // let rowData = Array.from(this.props.users, (value, index) => value)
-        let rowData = Array.from(users, (value, index) => value)
-        // console.log("====rowData, users, page", rowData, users, page)
+        console.log("===reqres users", users)
+        let rowData = Array.from(users.slice(skip, skip + pageLimit), (value, index) => value)
+        console.log("===reqres rowData", rowData)
+        this.setState((prevState, props) => { return { users: prevState.users.concat(users.slice(skip, skip + pageLimit)) }})
         // Simulate the end of the list if there is no more data returned from the server
         if (page === 10) {
           rowData = []
         }
 
         // Simulate the network loading in ES7 syntax (async/await)
-        await this.sleep(2000)
+        await this.sleep(100)
         startFetch(rowData, pageLimit)
       } catch (error) {
         console.error(error);
@@ -74,53 +66,6 @@ class ListScreen extends Component {
       abortFetch() // manually stop the refresh or pagination if it encounters network error
       console.log(err)
     }
-  }
-
-  updateDataSource = async (rows) => {
-      console.log("====updateDataSource rows", rows)
-      // try {
-
-      // This is required to determinate whether the first loading list is all loaded.
-    //   let pageLimit = 24
-    //   if (this.state.layout === 'grid') pageLimit = 60
-    //   const skip = (page - 1) * pageLimit
-    //
-    //   // Generate dummy data
-    //   // let rowData = Array.from({ length: pageLimit }, (value, index) => `item -> ${index + skip}`)
-    //
-    //
-    //   const apiOptions = {
-    //     method: 'GET',
-    //     url: `http://reqres.in/api/users?page=${page}`,
-    //   };
-    //   try {
-    //     const response = await axios(apiOptions)
-    //     const users = response.data.data
-    //     this.setState({
-    //       isUploading: false,
-    //       users
-    //     });
-    //     console.log("===api users", users)
-    //     this.props.getUsers(users)
-    //     // let rowData = Array.from(this.props.users, (value, index) => value)
-    //     let rowData = Array.from(users, (value, index) => value)
-    //     console.log("====rowData, users, page", rowData, users, page)
-    //     // Simulate the end of the list if there is no more data returned from the server
-    //     if (page === 10) {
-    //       rowData = []
-    //     }
-    //
-    //     // Simulate the network loading in ES7 syntax (async/await)
-    //     await this.sleep(2000)
-    //     startFetch(rowData, pageLimit)
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    //
-    // } catch (err) {
-    //   abortFetch() // manually stop the refresh or pagination if it encounters network error
-    //   console.log(err)
-    // }
   }
 
   onChangeLayout = (event) => {
@@ -139,9 +84,11 @@ class ListScreen extends Component {
 
   onChangeScrollToIndex = (num) => {
     this.setState({ text: num })
-    let index = num
+    let index = this.state.users.findIndex(k => `${k.first_name} ${k.last_name}`.includes(num))
+    // let index = num
     if (this.state.layout === 'grid') {
-      index = num / 3
+      // index = num / 3
+      index = index / 3
     }
     try {
       this.listView.scrollToIndex({ viewPosition: 0, index: Math.floor(index) })
@@ -204,13 +151,13 @@ class ListScreen extends Component {
               <Input placeholder="Search" onChangeText={this.onChangeScrollToIndex} value={this.state.text} />
             </Item>
           </Header>
+        {this.props.users.length !==0 &&
           <UltimateListView
             ref={ref => this.listView = ref}
             key={this.state.layout} // this is important to distinguish different FlatList, default is numColumns
             onFetch={this.onFetch}
             keyExtractor={(item, index) => `${index} - ${item}`} // this is required when you are using FlatList
             refreshableMode="advanced" // basic or advanced
-            updateDataSource={this.updateDataSource}
             item={this.renderItem} // this takes three params (item, index, separator)
             numColumns={this.state.layout === 'list' ? 1 : 3} // to use grid layout, simply set gridColumn > 1
 
@@ -231,12 +178,13 @@ class ListScreen extends Component {
             refreshViewStyle={Platform.OS === 'ios' ? { height: 80, top: -80 } : { height: 80 }}
             refreshViewHeight={80}
           />
+        }
       </View>
     )
   }
 }
 const mapStateToProps = (state) => {
-  console.log("===redux state tree", state)
+  // console.log("===redux state tree", state)
   return {
     users: state.users.users,
   }
