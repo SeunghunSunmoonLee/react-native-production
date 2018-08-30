@@ -25,6 +25,7 @@ class ListScreen extends Component {
     }
   }
   componentDidMount = async () => {
+
   }
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):

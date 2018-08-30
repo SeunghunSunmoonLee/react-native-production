@@ -35,20 +35,17 @@ class ListScreen extends Component {
   onFetch = async (page = 1, startFetch, abortFetch) => {
     try {
       // This is required to determinate whether the first loading list is all loaded.
-      let pageLimit = 3
+      let pageLimit = 12
       if (this.state.layout === 'grid') pageLimit = 60
       const skip = (page - 1) * pageLimit
       const apiOptions = {
         method: 'GET',
-        url: `http://reqres.in/api/users?page=${page}`,
+        url: `http://reqres.in/api/users?page=${page}&per_page=12`,
       };
-
       try {
         const response = await axios(apiOptions)
         const users = response.data.data
-        console.log("===reqres users", users)
         let rowData = Array.from(users.slice(skip, skip + pageLimit), (value, index) => value)
-        console.log("===reqres rowData", rowData)
         this.setState((prevState, props) => { return { users: prevState.users.concat(users.slice(skip, skip + pageLimit)) }})
         // Simulate the end of the list if there is no more data returned from the server
         if (page === 10) {

@@ -4,19 +4,30 @@ import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
 import ReduxPersist from '../Config/ReduxPersist'
+import LoadingAnimation from '../Components/LoadingAnimation'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
 
 class RootContainer extends Component {
+  state = {
+    isReady: false,
+  }
   componentDidMount () {
     // if redux persist is not active fire startup action
     if (!ReduxPersist.active) {
       this.props.startup()
     }
+    setTimeout(() => {this.setState({isReady: true})}, 3000)
   }
 
   render () {
+    if (!this.state.isReady) {
+      return (
+        <LoadingAnimation />
+      );
+    }
+
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle='light-content' />
